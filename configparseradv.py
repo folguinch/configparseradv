@@ -22,7 +22,7 @@ def converters(value, dtype):
     else:
         raise NotImplementedError('converter to %s not available' % dtype)
  
-class myConfigParser(ConfigParser):
+class ConfigParserAdv(ConfigParser):
     """Extend the configparser.ConfigParser behaviour.
     """
 
