@@ -5,26 +5,18 @@ from astropy.coordinates import SkyCoord
 import astropy.units as u
 import numpy as np
 
-def converters(value, dtype):
-    if dtype.lower()=='quantity':
-        aux = value.split()
-        if len(aux) == 2:
-            return float(aux[0])*u.Unit(aux[1])
-        else:
-            return np.array(aux[:-1], dtype=float) * u.Unit(aux[-1])
-    elif dtype.lower()=='skycoord':
-        try:
-            ra, dec, frame = value.split()
-        except ValueError:
-            ra, dec = value.split()
-            frame = 'icrs'
-        return SkyCoord(ra, dec, frame=frame)
-    else:
-        raise NotImplementedError('converter to %s not available' % dtype)
- 
+from .converters import *
+
 class ConfigParserAdv(ConfigParser):
     """Extend the configparser.ConfigParser behaviour.
     """
+
+    def __init__(self, **kwargs):
+        converters = {'list':list_converter, 'intlist':intlist_converter,
+                'floatlist':floatlist_converter, 'path':path_converter,
+                'skycoord':skycoord_converter}
+        converters = converters.update(kwargs.pop('converters'))
+        super().__init__(converters=converters, **kwargs)
 
     def getquantity(self, *args, **kwargs):
         """Return an ``astropy.Quantity`` from the parser data.
@@ -66,69 +58,69 @@ class ConfigParserAdv(ConfigParser):
             except ValueError:
                 return np.array(val[:-1], dtype=float) * u.Unit(val[-1])
 
-    def getlist(self, *args, **kwargs):
-        """Return a list of strings"""
-        val = self.get(*args, **kwargs)
-        if val is None:
-            return val
-        else:
-            try:
-                return val.split()
-            except AttributeError:
-                return list(val)
-            #if ' ' not in val:
-            #    return [val]
-            #else:
-            #    return val.split()
+    #def getlist(self, *args, **kwargs):
+    #    """Return a list of strings"""
+    #    val = self.get(*args, **kwargs)
+    #    if val is None:
+    #        return val
+    #    else:
+    #        try:
+    #            return val.split()
+    #        except AttributeError:
+    #            return list(val)
+    #        #if ' ' not in val:
+    #        #    return [val]
+    #        #else:
+    #        #    return val.split()
 
-    def getfloatlist(self, *args, **kwargs):
-        """Return a list of float values."""
-        #val = self.get(*args, **kwargs)
-        #if val is None:
-        #    return val
-        #else:
-        #    if ' ' not in val:
-        #        val = [val]
-        #    else:
-        #        val= val.split()
-        val = self.getlist(*args, **kwargs)
-        if val is None:
-            return val
-        else:
-            return map(float, val)
+    #def getfloatlist(self, *args, **kwargs):
+    #    """Return a list of float values."""
+    #    #val = self.get(*args, **kwargs)
+    #    #if val is None:
+    #    #    return val
+    #    #else:
+    #    #    if ' ' not in val:
+    #    #        val = [val]
+    #    #    else:
+    #    #        val= val.split()
+    #    val = self.getlist(*args, **kwargs)
+    #    if val is None:
+    #        return val
+    #    else:
+    #        return map(float, val)
 
-    def getintlist(self, *args, **kwargs):
-        """Return a list of int values."""
-        #val = self.get(*args, **kwargs)
-        #if val is None:
-        #    return val
-        #else:
-        #    if ' ' not in val:
-        #        val = [val]
-        #    else:
-        #        val= val.split()
-        val = self.getlist(*args, **kwargs)
-        if val is None:
-            return val
-        else:
-            return map(int, val)
+    #def getintlist(self, *args, **kwargs):
+    #    """Return a list of int values."""
+    #    #val = self.get(*args, **kwargs)
+    #    #if val is None:
+    #    #    return val
+    #    #else:
+    #    #    if ' ' not in val:
+    #    #        val = [val]
+    #    #    else:
+    #    #        val= val.split()
+    #    val = self.getlist(*args, **kwargs)
+    #    if val is None:
+    #        return val
+    #    else:
+    #        return map(int, val)
 
-    def getpath(self, *args, **kwargs):
-        """Return a real path"""
-        val = self.get(*args, **kwargs)
-        if val is None:
-            return val
-        else:
-            return os.path.expanduser(os.path.expandvars(val))
+    #def getpath(self, *args, **kwargs):
+    #    """Return a real path"""
+    #    val = self.get(*args, **kwargs)
+    #    if val is None:
+    #        return val
+    #    else:
+    #        return os.path.expanduser(os.path.expandvars(val))
 
-    def getskycoord(self, *args, **kwargs):
-        """Return an astropy SkyCoord"""
-        val = self.get(*args, **kwargs)
-        if val is None:
-            return val
-        else:
-            ra, dec, frame = val.split()
-            return SkyCoord(ra, dec, frame=frame)
+    #def getskycoord(self, *args, **kwargs):
+    #    """Return an astropy SkyCoord"""
+    #    val = self.get(*args, **kwargs)
+    #    if val is None:
+    #        return val
+    #    else:
+    #        ra, dec, frame = val.split()
+    #        return SkyCoord(ra, dec, frame=frame)
 
     def getvalue(self, *args, **kwargs):
         """Get values"""
@@ -176,7 +168,7 @@ class ConfigParserAdv(ConfigParser):
             try:
                 return opts['dtype'](value)
             except TypeError:
-                return converters(value, opts['dtype'])
+                return astropy_converter(value, opts['dtype'])
 
     def getvalueiter(self, *args, **kwargs):
         opts = {'sep':kwargs.get('sep', ' '), 'n':0, 'allow_global':False}
