@@ -1,1 +1,1 @@
-from configparseradv import ConfigParserAdv
+from .configparseradv import *

@@ -15,7 +15,10 @@ class ConfigParserAdv(ConfigParser):
         converters = {'list':list_converter, 'intlist':intlist_converter,
                 'floatlist':floatlist_converter, 'path':path_converter,
                 'skycoord':skycoord_converter}
-        converters = converters.update(kwargs.pop('converters'))
+        try:
+            converters = converters.update(kwargs.pop('converters'))
+        except KeyError:
+            pass
         super().__init__(converters=converters, **kwargs)
 
     def getquantity(self, *args, **kwargs):
