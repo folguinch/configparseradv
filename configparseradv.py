@@ -151,8 +151,7 @@ class ConfigParserAdv(ConfigParser):
                     try:
                         value = value[n]
                     except IndexError:
-                        print('WARNING: %s not in values list, using fallback'\
-                        % key)
+                        print(f'WARNING: {key} not in values list, using fallback')
                         value = opts['fallback']
         else:
             value = opts['fallback']
