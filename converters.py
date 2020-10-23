@@ -8,13 +8,15 @@ def splitter_decorator(dtype: None = None, min_length: int = 1):
     """Split the input value and convert it to dtype
     """
     def decorator(funct):
-        def wrapper(val, sep=' '):
+        def wrapper(val: str, sep: str = ' '):
             # Check
+            print(f'wrapper val {val}')
             if val is None:
                 return val
 
             # Split value
             aux = funct(val, sep=sep)
+            print(f'list_converter aux {aux}')
 
             # Convert
             if dtype is not None:
@@ -42,6 +44,7 @@ def coma_splitter(val: str, sep: str = None) -> list:
 
 @splitter_decorator
 def list_converter(val: str, sep: str = ' '):
+    print(f'list_converter val {val}')
     return val.split(sep)
 
 @splitter_decorator(dtype=int)
