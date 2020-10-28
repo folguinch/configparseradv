@@ -61,86 +61,32 @@ class ConfigParserAdv(ConfigParser):
             except ValueError:
                 return np.array(val[:-1], dtype=float) * u.Unit(val[-1])
 
-    #def getlist(self, *args, **kwargs):
-    #    """Return a list of strings"""
-    #    val = self.get(*args, **kwargs)
-    #    if val is None:
-    #        return val
-    #    else:
-    #        try:
-    #            return val.split()
-    #        except AttributeError:
-    #            return list(val)
-    #        #if ' ' not in val:
-    #        #    return [val]
-    #        #else:
-    #        #    return val.split()
-
-    #def getfloatlist(self, *args, **kwargs):
-    #    """Return a list of float values."""
-    #    #val = self.get(*args, **kwargs)
-    #    #if val is None:
-    #    #    return val
-    #    #else:
-    #    #    if ' ' not in val:
-    #    #        val = [val]
-    #    #    else:
-    #    #        val= val.split()
-    #    val = self.getlist(*args, **kwargs)
-    #    if val is None:
-    #        return val
-    #    else:
-    #        return map(float, val)
-
-    #def getintlist(self, *args, **kwargs):
-    #    """Return a list of int values."""
-    #    #val = self.get(*args, **kwargs)
-    #    #if val is None:
-    #    #    return val
-    #    #else:
-    #    #    if ' ' not in val:
-    #    #        val = [val]
-    #    #    else:
-    #    #        val= val.split()
-    #    val = self.getlist(*args, **kwargs)
-    #    if val is None:
-    #        return val
-    #    else:
-    #        return map(int, val)
-
-    #def getpath(self, *args, **kwargs):
-    #    """Return a real path"""
-    #    val = self.get(*args, **kwargs)
-    #    if val is None:
-    #        return val
-    #    else:
-    #        return os.path.expanduser(os.path.expandvars(val))
-
-    #def getskycoord(self, *args, **kwargs):
-    #    """Return an astropy SkyCoord"""
-    #    val = self.get(*args, **kwargs)
-    #    if val is None:
-    #        return val
-    #    else:
-    #        ra, dec, frame = val.split()
-    #        return SkyCoord(ra, dec, frame=frame)
-
     def getvalue(self, *args, **kwargs):
-        """Get values"""
+        """Get values and convert if needed
+        
+        Accepted kwargs:
+            fallback: default value
+            n: if several values return value n
+            sep: separator between values
+            dtype: type for conversion. Astropy objects available: quantity,
+                skycoord
+            allow_global: if one value is given but n!=0 use this value as
+                default
+        """
         # Options
         opts = {'fallback':None, 'n':None, 'sep':' ', 'dtype':None,
                 'allow_global':True}
         opts.update(kwargs)
         
         # Abbreviations
-        n = opts['n']
+        n = int(opts['n'])
         key = args[1]
         getkw = {'fallback':opts['fallback']}
 
         # Get values
-        if n is not None and (key + str(n)) in self.options(args[0]):
-            newkey = key + str(n)
-            value = self.get(args[0], newkey, **getkw)
+        subkey = f'{key}{n}'
+        if n is not None and subkey in self.options(args[0]):
+            value = self.get(args[0], subkey, **getkw)
         elif key in self.options(args[0]):
             value = self.get(*args, **getkw)
             if n is not None:
@@ -173,6 +119,7 @@ class ConfigParserAdv(ConfigParser):
                 return astropy_converter(value, opts['dtype'])
 
     def getvalueiter(self, *args, **kwargs):
+        """Iterator over velues in option"""
         opts = {'sep':kwargs.get('sep', ' '), 'n':0, 'allow_global':False}
         while self.getvalue(*args, **opts):
             kwargs['n'] = opts['n']
