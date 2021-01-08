@@ -5,7 +5,7 @@ import os
 import astropy.units as u
 import numpy as np
 
-from .converters import *
+import configparseradv.converters as conv
 
 class ConfigParserAdv(cparser.ConfigParser):
     """Extend the configparser.ConfigParser behaviour.
