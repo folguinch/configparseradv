@@ -77,7 +77,7 @@ def get_boolkeys(config: Parser, keys: List[str],
     values = []
     for key, fallback in zip(keys, fallbacks):
         if section is None:
-            values.append(self.getboolean(key, fallback=fallback))
+            values.append(config.getboolean(key, fallback=fallback))
         else:
-            values.append(self.getboolean(section, key, fallback=fallback))
+            values.append(config.getboolean(section, key, fallback=fallback))
     return values
