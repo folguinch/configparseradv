@@ -56,9 +56,9 @@ def get_intkeys(config: Parser, keys: List[str], section: Optional[str] = None,
     return list(map(int, get_keys(config, keys, section=section,
                                   fallbacks=fallbacks)))
 
-    def get_boolkeys(config: Parser, keys: List[str],
-                     section: Optional[str] = None,
-                     fallbacks: List[bool] = [False]) -> List:
+def get_boolkeys(config: Parser, keys: List[str],
+                 section: Optional[str] = None,
+                 fallbacks: List[bool] = [False]) -> List:
     """Return the values in list of keys converted to boolean.
     
     Args:
