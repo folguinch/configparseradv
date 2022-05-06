@@ -1,3 +1,4 @@
+"""An advanced version of the `ConfigParser` class."""
 from typing import List, Optional
 import configparser as cparser
 import os
@@ -132,81 +133,6 @@ class ConfigParserAdv(cparser.ConfigParser):
                 return opts['dtype'](value)
             except TypeError:
                 return astropy_converter(value, opts['dtype'])
-
-    def get_keys(self, keys: List[str], section: Optional[str] = None, 
-                 fallbacks: list = [None]) ->  list:
-        """Return the values in list of keys.
-        
-        Args:
-          keys: section options to read.
-          section: optional; configuration file section (if not a proxy).
-          fallbacks: optional; fallback values.
-        """
-        if len(fallbacks) == 1 and len(keys) != 1:
-            fallbacks = fallbacks * len(keys)
-        elif len(fallbacks) != len(keys):
-            raise ValueError('Fallbacks and keys lengths do not match')
-        else:
-            pass
-
-        values = []
-        for key, fallback in zip(keys, fallbacks):
-            if section is None:
-                values.append(self.get(key, fallback=fallback))
-            else:
-                values.append(self.get(section, key, fallback=fallback))
-
-        return values
-
-    def get_floatkeys(self, keys: List[str], section: Optional[str] = None,
-                      fallbacks: List[float] = ['nan']) -> list:
-        """Return the values in list of keys converted to float.
-        
-        Args:
-          keys: section options to read.
-          section: optional; configuration file section.
-          fallbacks: optional; fallback values.
-        """
-        return list(map(float,
-                        self.get_keys(keys, section=section,
-                                      fallbacks=fallbacks)))
-
-    def get_intkeys(self, keys: List[str], section: Optional[str] = None,
-                    fallbacks: List[int] = ['nan']) -> list:
-        """Return the values in list of keys converted to int.
-        
-        Args:
-          keys: section options to read.
-          section: optional; configuration file section.
-          fallbacks: optional; fallback values.
-        """
-        return list(map(int,
-                        self.getkeys(keys, section=section,
-                                     fallbacks=fallbacks)))
-
-    def get_boolkeys(self, keys: List[str], section: Optional[str] = None,
-                     fallbacks: List[bool] = [False]) -> list:
-        """Return the values in list of keys converted to boolean.
-        
-        Args:
-          keys: section options to read.
-          section: optional; configuration file section.
-          fallbacks: optional; fallback values.
-        """
-        if len(fallbacks) == 1 and len(keys) != 1:
-            fallbacks = fallbacks * len(keys)
-        elif len(fallbacks) != len(keys):
-            raise ValueError('Fallbacks and keys lengths do not match')
-        else:
-            pass
-
-        values = []
-        for key, fallback in zip(keys, fallbacks):
-            if section is None:
-                values.append(self.getboolean(key, fallback=fallback))
-            else:
-                values.append(self.getboolean(section, key, fallback=fallback))
-        return values
 
     def getvalueiter(self, *args, **kwargs):
         """Iterator over velues in option.
