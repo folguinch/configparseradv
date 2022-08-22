@@ -6,7 +6,7 @@ import os
 import astropy.units as u
 import numpy as np
 
-import configparseradv.converters as conv
+import .converters as conv
 
 class ConfigParserAdv(cparser.ConfigParser):
     """Extend the `configparser.ConfigParser` behaviour."""
@@ -132,7 +132,7 @@ class ConfigParserAdv(cparser.ConfigParser):
             try:
                 return opts['dtype'](value)
             except TypeError:
-                return astropy_converter(value, opts['dtype'])
+                return conv.astropy_converter(value, opts['dtype'])
 
     def getvalueiter(self, *args, **kwargs):
         """Iterator over velues in option.
