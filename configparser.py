@@ -6,8 +6,9 @@ import os
 import astropy.units as u
 import numpy as np
 
-from .converters as (astropy_converter, list_converter, intlist_converter,
-                     floatlist_converter, path_converter, skycoord_converter)
+from .converters import (astropy_converter, list_converter, intlist_converter,
+                         floatlist_converter, path_converter,
+                         skycoord_converter)
 
 class ConfigParserAdv(cparser.ConfigParser):
     """Extend the `configparser.ConfigParser` behaviour."""
