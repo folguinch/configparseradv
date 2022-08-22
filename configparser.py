@@ -6,18 +6,19 @@ import os
 import astropy.units as u
 import numpy as np
 
-import .converters as conv
+from .converters as (astropy_converter, list_converter, intlist_converter,
+                     floatlist_converter, path_converter, skycoord_converter)
 
 class ConfigParserAdv(cparser.ConfigParser):
     """Extend the `configparser.ConfigParser` behaviour."""
 
     def __init__(self, **kwargs):
         converters = {
-            'list':conv.list_converter, 
-            'intlist':conv.intlist_converter,
-            'floatlist':conv.floatlist_converter, 
-            'path':conv.path_converter,
-            'skycoord':conv.skycoord_converter,
+            'list': list_converter, 
+            'intlist': intlist_converter,
+            'floatlist': floatlist_converter, 
+            'path': path_converter,
+            'skycoord': skycoord_converter,
         }
         try:
             converters = converters.update(kwargs.pop('converters'))
@@ -132,7 +133,7 @@ class ConfigParserAdv(cparser.ConfigParser):
             try:
                 return opts['dtype'](value)
             except TypeError:
-                return conv.astropy_converter(value, opts['dtype'])
+                return astropy_converter(value, opts['dtype'])
 
     def getvalueiter(self, *args, **kwargs):
         """Iterator over velues in option.
