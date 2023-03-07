@@ -81,7 +81,7 @@ def astropy_converter(val: str, dtype: str):
     Raises:
         NotImplementedError: if dtype is not available
     """
-    if dtype.lower()=='quantity':
+    if dtype.lower() == 'quantity':
         aux = val.split()
         if len(aux) < 2:
             return float(aux[0]) * u.dimensionless_unscaled
@@ -89,7 +89,7 @@ def astropy_converter(val: str, dtype: str):
             return float(aux[0]) * u.Unit(aux[1])
         else:
             return np.array(aux[:-1], dtype=float) * u.Unit(aux[-1])
-    elif dtype.lower()=='skycoord':
+    elif dtype.lower() == 'skycoord':
         try:
             ra, dec, frame = val.split()
         except ValueError:
@@ -98,5 +98,3 @@ def astropy_converter(val: str, dtype: str):
         return SkyCoord(ra, dec, frame=frame)
     else:
         raise NotImplementedError('converter to %s not available' % dtype)
- 
-
