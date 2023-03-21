@@ -1,7 +1,8 @@
 """Utilities for working with `ConfigParserAdv` objects"""
 from typing import List, Sequence, Optional, Union
 
-Parser = Union['ConfigParserAdv', 'ConfigParserProxy']
+Parser = Union['configparseradv.configparser.ConfigParserAdv',
+               'configparser.SectionProxy']
 
 def get_keys(config: Parser, keys: List[str], section: Optional[str] = None,
              fallbacks: Sequence = (None,)) ->  List:
