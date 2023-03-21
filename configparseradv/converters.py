@@ -1,3 +1,4 @@
+"""Converters for `get` attributes of parser."""
 from pathlib import Path
 
 from astropy.coordinates import SkyCoord
@@ -28,7 +29,7 @@ def splitter_decorator(dtype: None = None, min_length: int = 1):
 
             return aux
         return wrapper
-    return decorator 
+    return decorator
 
 def coma_splitter(val: str, sep: str = None) -> list:
     if ',' in val:
@@ -97,4 +98,4 @@ def astropy_converter(val: str, dtype: str):
             frame = 'icrs'
         return SkyCoord(ra, dec, frame=frame)
     else:
-        raise NotImplementedError('converter to %s not available' % dtype)
+        raise NotImplementedError(f'Converter to {dtype} not available')

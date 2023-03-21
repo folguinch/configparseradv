@@ -1,10 +1,10 @@
 """Utilities for working with `ConfigParserAdv` objects"""
-from typing import List, Optional, Union
+from typing import List, Sequence, Optional, Union
 
 Parser = Union['ConfigParserAdv', 'ConfigParserProxy']
 
 def get_keys(config: Parser, keys: List[str], section: Optional[str] = None,
-             fallbacks: list = [None]) ->  List:
+             fallbacks: Sequence = (None,)) ->  List:
     """Return the values in list of keys.
     
     Args:
@@ -31,7 +31,7 @@ def get_keys(config: Parser, keys: List[str], section: Optional[str] = None,
 
 def get_floatkeys(config: Parser, keys: List[str],
                   section: Optional[str] = None,
-                  fallbacks: List[float] = ['nan']) -> List:
+                  fallbacks: Sequence[float] = ('nan',)) -> List:
     """Return the values in list of keys converted to float.
     
     Args:
@@ -44,7 +44,7 @@ def get_floatkeys(config: Parser, keys: List[str],
                                     fallbacks=fallbacks)))
 
 def get_intkeys(config: Parser, keys: List[str], section: Optional[str] = None,
-                fallbacks: List[int] = ['nan']) -> List:
+                fallbacks: Sequence[int] = ('nan',)) -> List:
     """Return the values in list of keys converted to int.
     
     Args:
@@ -58,7 +58,7 @@ def get_intkeys(config: Parser, keys: List[str], section: Optional[str] = None,
 
 def get_boolkeys(config: Parser, keys: List[str],
                  section: Optional[str] = None,
-                 fallbacks: List[bool] = [False]) -> List:
+                 fallbacks: Sequence[bool] = (False,)) -> List:
     """Return the values in list of keys converted to boolean.
     
     Args:
