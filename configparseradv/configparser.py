@@ -1,7 +1,5 @@
 """An advanced version of the `ConfigParser` class."""
-from typing import List, Optional
 import configparser as cparser
-import os
 
 import astropy.units as u
 import numpy as np
@@ -25,10 +23,10 @@ class ConfigParserAdv(cparser.ConfigParser):
             converters = converters.update(kwargs.pop('converters'))
         except KeyError:
             pass
-        interpolation = kwargs.pop('interpolation', 
+        interpolation = kwargs.pop('interpolation',
                                    cparser.ExtendedInterpolation())
-        super().__init__(converters=converters, 
-                         interpolation=interpolation, 
+        super().__init__(converters=converters,
+                         interpolation=interpolation,
                          **kwargs)
 
     def getquantity(self, *args, **kwargs):
@@ -48,7 +46,7 @@ class ConfigParserAdv(cparser.ConfigParser):
                 return (val + 0) * u.Unit(1)
             except TypeError:
                 pass
-        
+
         # Fallback values
         if val is None or len(val) == 0:
             return val
@@ -64,12 +62,11 @@ class ConfigParserAdv(cparser.ConfigParser):
             return float(val[0]) * u.Unit(val[1])
         else:
             # Array of values
-            try:
-                # Check if dimensionless
-                aux = float(val[-1])
-                return np.array(val, dtype=float) * u.Unit(1)
-            except ValueError:
-                return np.array(val[:-1], dtype=float) * u.Unit(val[-1])
+            if val[-1].strip() in ['dimless', 'dimensionless', 'nounit', '1']:
+                unit = u.dimensionless_unscaled
+            else:
+                unit = u.Unit(val[-1])
+            return np.array(val, dtype=float) * unit
 
     def getvalue(self, *args, **kwargs):
         """Get values and convert if needed.
@@ -92,7 +89,7 @@ class ConfigParserAdv(cparser.ConfigParser):
             'allow_global':True,
         }
         opts.update(kwargs)
-        
+
         # Abbreviations
         n = int(opts['n'])
         key = args[1]
@@ -120,11 +117,11 @@ class ConfigParserAdv(cparser.ConfigParser):
                         value = opts['fallback']
         else:
             value = opts['fallback']
-        
+
         # Strip spaces
         try:
             value = value.strip()
-        except:
+        except AttributeError:
             pass
 
         # Convert
