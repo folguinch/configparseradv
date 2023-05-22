@@ -8,6 +8,15 @@ from .converters import (astropy_converter, list_converter, intlist_converter,
                          floatlist_converter, path_converter,
                          skycoord_converter)
 
+def get_boolean(value) -> bool:
+    """Convert `value` to boolean as defined in `configparser`."""
+    if value.strip().lower() in ['1', 'yes', 'true', 'on']:
+        return True
+    elif value.strip().lower() in ['0', 'no', 'false', 'off']:
+        return False
+    else:
+        raise ValueError(f'Cannot convert to boolean: {value}')
+
 class ConfigParserAdv(cparser.ConfigParser):
     """Extend the `configparser.ConfigParser` behaviour."""
 
@@ -129,7 +138,10 @@ class ConfigParserAdv(cparser.ConfigParser):
             return value
         else:
             try:
-                return opts['dtype'](value)
+                if opts['dtype'] == bool:
+                    return get_boolean(value)
+                else:
+                    return opts['dtype'](value)
             except TypeError:
                 return astropy_converter(value, opts['dtype'])
 
