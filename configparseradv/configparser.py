@@ -75,7 +75,7 @@ class ConfigParserAdv(cparser.ConfigParser):
                 unit = u.dimensionless_unscaled
             else:
                 unit = u.Unit(val[-1])
-            return np.array(val, dtype=float) * unit
+            return np.array(val[:-1], dtype=float) * unit
 
     def getvalue(self, *args, **kwargs):
         """Get values and convert if needed.
