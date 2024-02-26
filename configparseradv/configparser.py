@@ -29,7 +29,7 @@ class ConfigParserAdv(cparser.ConfigParser):
             'skycoord': skycoord_converter,
         }
         try:
-            converters = converters.update(kwargs.pop('converters'))
+            converters.update(kwargs.pop('converters'))
         except KeyError:
             pass
         interpolation = kwargs.pop('interpolation',
@@ -91,11 +91,11 @@ class ConfigParserAdv(cparser.ConfigParser):
         """
         # Options
         opts = {
-            'fallback':None, 
-            'n':None, 
-            'sep':' ', 
-            'dtype':None,
-            'allow_global':True,
+            'fallback': None, 
+            'n': None, 
+            'sep': ' ', 
+            'dtype': None,
+            'allow_global': True,
         }
         opts.update(kwargs)
 
