@@ -1,15 +1,15 @@
 [tool.poetry]
 name = "configparseradv"
-version = "0.1.0"
+version = "0.1.1"
 description = "Configuration parser with extended capabilities"
 authors = ["Fernando Olguin <f.olguin.ch@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
-numpy = "^1.24.2"
-astropy = "^5.2.1"
+python = ">=3.9,<4.0"
+numpy = "^1.26.3"
+astropy = "^6.0.0"
 
 
 [build-system]
