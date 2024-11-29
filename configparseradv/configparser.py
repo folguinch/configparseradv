@@ -167,7 +167,7 @@ class ConfigParserAdv(cparser.ConfigParser):
         if ignore_default:
             new_opts = {}
             for opt, val in self.items(section):
-                if opt in self[self.DEFAULTSECT]:
+                if opt in self[self.default_section]:
                     continue
                 new_opts[opt] = val
             self[new_section] = new_opts
