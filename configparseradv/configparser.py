@@ -161,3 +161,16 @@ class ConfigParserAdv(cparser.ConfigParser):
                 break
             opts['n'] = opts['n'] + 1
 
+    def copy_section(self, section: str, new_section: str,
+                     ignore_default: bool = False):
+        """Copy section."""
+        if ignore_default:
+            new_opts = {}
+            for opt, val in self.items(section):
+                if opt in self[self.DEFAULTSECT]:
+                    continue
+                new_opts[opt] = val
+            self[new_section] = new_opts
+        else:
+            self[new_section] = dict(self[section])
+
